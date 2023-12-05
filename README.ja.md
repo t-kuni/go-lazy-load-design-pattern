@@ -1,23 +1,21 @@
 # go-lazy-load-pattern
 
-[日本語](./README.ja.md)
+以下を実現する実装パターン
 
-Implementation pattern to achieve the following:
+* 遅延ロード
+* インメモリキャッシュ
+* インメモリインデキシング
 
-* Lazy loading
-* In-memory caching
-* In-memory indexing
+# 活用できるケース
 
-# Applicable Cases
+* やりたい事を素直にプログラムに落とし込むと複数回のDBアクセスが発生しパフォーマンスの問題につながる場合
+  * -> 複数回のDBアクセスを1度にまとめてインメモリキャッシュに保持する
+  * -> インメモリでインデックス（連想配列）を作成し、配列の検索を高速化する
+* ORMのPreloadやEager Loadingで解決できない場合
+* フィルタリングの機能により、出力対象外の場合はDBアクセスを行いたくない場合
+  * -> 遅延ロードにより、出力対象外の場合はDBアクセスを行わないようにする
 
-* When translating a desired operation directly into a program, multiple database accesses occur, leading to performance issues
-    * -> Consolidate multiple database accesses into one and retain in in-memory cache
-    * -> Create an index (associative array) in-memory to speed up array searches
-* When ORM's Preload or Eager Loading doesn't solve the issue
-* When you do not want to access the database if it's outside the output target due to filtering functions
-    * -> Utilize lazy loading to avoid database access when it's outside the output target
-
-# Implementation Example
+# 実装例
 
 ```go
 type Record struct {

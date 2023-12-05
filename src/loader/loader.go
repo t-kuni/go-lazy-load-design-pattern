@@ -1,4 +1,4 @@
-package src
+package loader
 
 type Loader[T any] struct {
 	loader func() ([]T, error)

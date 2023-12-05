@@ -1,4 +1,4 @@
-package src
+package loader
 
 import (
 	"errors"
@@ -14,8 +14,7 @@ func TestCacheHolder(t *testing.T) {
 		Age  int
 	}
 
-	// Loadを２回呼び出して、２回目はキャッシュから取得されること
-	t.Run("Load", func(t *testing.T) {
+	t.Run("Loadを２回呼び出して、２回目はキャッシュから取得されること", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 

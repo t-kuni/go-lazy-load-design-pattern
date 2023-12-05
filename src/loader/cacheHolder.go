@@ -1,4 +1,4 @@
-package src
+package loader
 
 type CacheHolder[T any] struct {
 	arr    []T
