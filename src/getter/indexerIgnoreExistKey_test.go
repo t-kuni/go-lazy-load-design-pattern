@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestArrayIndexer_Get(t *testing.T) {
+func TestIndexerIgnoreExistKey_Get(t *testing.T) {
 	type Item struct {
 		Id   string
 		Name string
@@ -25,24 +25,22 @@ func TestArrayIndexer_Get(t *testing.T) {
 			Return([]*Item{
 				{"1", "John", 20},
 				{"2", "Jane", 30},
-				{"3", "Joe", 30},
+				{"3", "Joe", 40},
 			}, nil).
 			Times(1)
-		testee := NewArrayIndexer[*Item](mockLoader, func(item *Item) (int, *Item, error) {
-			return item.Age, item, nil
+		testee := NewIndexerIgnoreExistKey[*Item](mockLoader, func(item *Item) (string, error) {
+			return item.Name, nil
+		}, func(item *Item) (*Item, error) {
+			return item, nil
 		})
 
 		{
-			items, ok, err := testee.Get(30)
+			item, ok, err := testee.Get("Jane")
 			assert.NoError(t, err)
 			assert.True(t, ok)
-			assert.Len(t, items, 2)
-			assert.Equal(t, "2", items[0].Id)
-			assert.Equal(t, "Jane", items[0].Name)
-			assert.Equal(t, 30, items[0].Age)
-			assert.Equal(t, "3", items[1].Id)
-			assert.Equal(t, "Joe", items[1].Name)
-			assert.Equal(t, 30, items[1].Age)
+			assert.Equal(t, "2", item.Id)
+			assert.Equal(t, "Jane", item.Name)
+			assert.Equal(t, 30, item.Age)
 		}
 	})
 
@@ -56,25 +54,27 @@ func TestArrayIndexer_Get(t *testing.T) {
 			Return([]*Item{
 				{"1", "John", 20},
 				{"2", "Jane", 30},
-				{"3", "Joe", 30},
+				{"3", "Joe", 40},
 			}, nil).
 			Times(1)
-		testee := NewArrayIndexer[*Item](mockLoader, func(item *Item) (int, *Item, error) {
-			return item.Age, item, nil
+		testee := NewIndexerIgnoreExistKey[*Item](mockLoader, func(item *Item) (string, error) {
+			return item.Name, nil
+		}, func(item *Item) (*Item, error) {
+			return item, nil
 		})
 
 		{
-			items, ok, err := testee.Get(20)
+			item, ok, err := testee.Get("Jane")
 			assert.NoError(t, err)
 			assert.True(t, ok)
-			assert.Len(t, items, 1)
+			assert.Equal(t, "2", item.Id)
 		}
 
 		{
-			items, ok, err := testee.Get(30)
+			item, ok, err := testee.Get("Joe")
 			assert.NoError(t, err)
 			assert.True(t, ok)
-			assert.Len(t, items, 2)
+			assert.Equal(t, "3", item.Id)
 		}
 	})
 
@@ -91,16 +91,18 @@ func TestArrayIndexer_Get(t *testing.T) {
 				{"3", "Joe", 40},
 			}, nil).
 			Times(1)
-		testee := NewArrayIndexer[*Item](mockLoader, func(item *Item) (int, *Item, error) {
-			return item.Age, item, nil
+		testee := NewIndexerIgnoreExistKey[*Item](mockLoader, func(item *Item) (string, error) {
+			return item.Name, nil
+		}, func(item *Item) (*Item, error) {
+			return item, nil
 		})
 
-		_, ok, err := testee.Get(999)
+		_, ok, err := testee.Get("XXX")
 		assert.NoError(t, err)
 		assert.False(t, ok)
 	})
 
-	t.Run("If the closure returns an error, an error should be returned", func(t *testing.T) {
+	t.Run("If the closure provide key returns an error, an error should be returned", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -113,11 +115,36 @@ func TestArrayIndexer_Get(t *testing.T) {
 				{"3", "Joe", 40},
 			}, nil).
 			Times(1)
-		testee := NewArrayIndexer[*Item](mockLoader, func(item *Item) (int, *Item, error) {
-			return 0, nil, errors.New("error")
+		testee := NewIndexerIgnoreExistKey[*Item](mockLoader, func(item *Item) (string, error) {
+			return "", errors.New("error")
+		}, func(item *Item) (*Item, error) {
+			return item, nil
 		})
 
-		_, _, err := testee.Get(999)
+		_, _, err := testee.Get("XXX")
+		assert.Error(t, err)
+	})
+
+	t.Run("If the closure provide value returns an error, an error should be returned", func(t *testing.T) {
+		mockCtrl := gomock.NewController(t)
+		defer mockCtrl.Finish()
+
+		mockLoader := loader.NewMockILoader[*Item](mockCtrl)
+		mockLoader.EXPECT().
+			Load().
+			Return([]*Item{
+				{"1", "John", 20},
+				{"2", "Jane", 30},
+				{"3", "Joe", 40},
+			}, nil).
+			Times(1)
+		testee := NewIndexerIgnoreExistKey[*Item](mockLoader, func(item *Item) (string, error) {
+			return item.Name, nil
+		}, func(item *Item) (*Item, error) {
+			return nil, errors.New("error")
+		})
+
+		_, _, err := testee.Get("XXX")
 		assert.Error(t, err)
 	})
 
@@ -130,11 +157,13 @@ func TestArrayIndexer_Get(t *testing.T) {
 			Load().
 			Return(nil, errors.New("error")).
 			Times(1)
-		testee := NewArrayIndexer[*Item](mockLoader, func(item *Item) (int, *Item, error) {
-			return item.Age, item, nil
+		testee := NewIndexerIgnoreExistKey[*Item](mockLoader, func(item *Item) (string, error) {
+			return item.Name, nil
+		}, func(item *Item) (*Item, error) {
+			return item, nil
 		})
 
-		_, _, err := testee.Get(999)
+		_, _, err := testee.Get("XXX")
 		assert.Error(t, err)
 	})
 }

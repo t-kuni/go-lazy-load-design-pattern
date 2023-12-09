@@ -14,7 +14,7 @@ func TestCacheHolder_Load(t *testing.T) {
 		Age  int
 	}
 
-	t.Run("Load is called twice, and the second call retrieves from cache", func(t *testing.T) { // Translated
+	t.Run("Load is called twice, and the second call retrieves from cache", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -44,7 +44,7 @@ func TestCacheHolder_Load(t *testing.T) {
 		assert.Equal(t, 40, items[2].Age)
 	})
 
-	t.Run("If the source Loader returns an error, an error should be returned", func(t *testing.T) { // Translated
+	t.Run("If the source Loader returns an error, an error should be returned", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 

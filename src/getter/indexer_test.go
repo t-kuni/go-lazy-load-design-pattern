@@ -15,7 +15,7 @@ func TestIndexer_Get(t *testing.T) {
 		Age  int
 	}
 
-	t.Run("Should be able to retrieve a record with the specified key", func(t *testing.T) { // Translated
+	t.Run("Should be able to retrieve a record with the specified key", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -42,7 +42,7 @@ func TestIndexer_Get(t *testing.T) {
 		}
 	})
 
-	t.Run("If called twice, the source Loader is called only once", func(t *testing.T) { // Translated
+	t.Run("If called twice, the source Loader is called only once", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -74,7 +74,7 @@ func TestIndexer_Get(t *testing.T) {
 		}
 	})
 
-	t.Run("If a non-existent key is specified, the second return value should be false", func(t *testing.T) { // Translated
+	t.Run("If a non-existent key is specified, the second return value should be false", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -96,7 +96,7 @@ func TestIndexer_Get(t *testing.T) {
 		assert.False(t, ok)
 	})
 
-	t.Run("If the closure returns an error, an error should be returned", func(t *testing.T) { // Translated
+	t.Run("If the closure returns an error, an error should be returned", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -117,7 +117,7 @@ func TestIndexer_Get(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("If the source Loader returns an error, an error should be returned", func(t *testing.T) { // Translated
+	t.Run("If the source Loader returns an error, an error should be returned", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
