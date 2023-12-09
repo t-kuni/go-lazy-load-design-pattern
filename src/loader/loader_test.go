@@ -13,7 +13,7 @@ func TestLoader_Load(t *testing.T) {
 		Age  int
 	}
 
-	t.Run("クロージャで返した配列を返すこと", func(t *testing.T) {
+	t.Run("Should return the array returned by the closure", func(t *testing.T) { // Translated
 		testee := NewLoader(func() ([]*Item, error) {
 			return []*Item{
 				{"1", "John", 20},
@@ -34,7 +34,7 @@ func TestLoader_Load(t *testing.T) {
 		assert.Equal(t, 40, items[2].Age)
 	})
 
-	t.Run("クロージャがエラーを返す場合、エラーを返すこと", func(t *testing.T) {
+	t.Run("If the closure returns an error, an error should be returned", func(t *testing.T) { // Translated
 		testee := NewLoader(func() ([]*Item, error) {
 			return nil, errors.New("error")
 		})

@@ -14,7 +14,7 @@ func TestCacheHolder_Load(t *testing.T) {
 		Age  int
 	}
 
-	t.Run("Loadを２回呼び出して、２回目はキャッシュから取得されること", func(t *testing.T) {
+	t.Run("Load is called twice, and the second call retrieves from cache", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -26,10 +26,10 @@ func TestCacheHolder_Load(t *testing.T) {
 				{"2", "Jane", 30},
 				{"3", "Joe", 40},
 			}, nil).
-			Times(1) // 1回しか呼び出されないこと
+			Times(1) // Ensure it's called only once
 		testee := NewCacheHolder[*Item](mockLoader)
 
-		// Loadを2回実行
+		// Execute Load twice
 		_, err := testee.Load()
 		items, err := testee.Load()
 
@@ -44,7 +44,7 @@ func TestCacheHolder_Load(t *testing.T) {
 		assert.Equal(t, 40, items[2].Age)
 	})
 
-	t.Run("sourceのLoaderがエラーを返した場合、エラーを返すこと", func(t *testing.T) {
+	t.Run("If the source Loader returns an error, an error should be returned", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 

@@ -14,7 +14,7 @@ func TestConverter_Load(t *testing.T) {
 		Age  int
 	}
 
-	t.Run("変換処理を適応した後の値が取得できること", func(t *testing.T) {
+	t.Run("Should be able to retrieve the value after applying the conversion process", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -28,7 +28,7 @@ func TestConverter_Load(t *testing.T) {
 			}, nil).
 			Times(1)
 		testee := NewConverter[*Item](mockLoader, func(items []*Item) ([]*Item, error) {
-			for i, _ := range items {
+			for i := range items {
 				items[i].Name = items[i].Name + "(Converted)"
 			}
 			return items, nil
@@ -47,7 +47,7 @@ func TestConverter_Load(t *testing.T) {
 		assert.Equal(t, 40, items[2].Age)
 	})
 
-	t.Run("クロージャがエラーを返す場合、エラーを返すこと", func(t *testing.T) {
+	t.Run("If the closure returns an error, an error should be returned", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -68,7 +68,7 @@ func TestConverter_Load(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("sourceのLoaderがエラーを返した場合、エラーを返すこと", func(t *testing.T) {
+	t.Run("If the source Loader returns an error, an error should be returned", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -78,7 +78,7 @@ func TestConverter_Load(t *testing.T) {
 			Return(nil, errors.New("error")).
 			Times(1)
 		testee := NewConverter[*Item](mockLoader, func(items []*Item) ([]*Item, error) {
-			for i, _ := range items {
+			for i := range items {
 				items[i].Name = items[i].Name + "(Converted)"
 			}
 			return items, nil

@@ -14,7 +14,7 @@ func TestConverter_Get(t *testing.T) {
 		Age  int
 	}
 
-	t.Run("変換処理を適応した後の値が取得できること", func(t *testing.T) {
+	t.Run("Should be able to retrieve the value after applying the conversion process", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -38,7 +38,7 @@ func TestConverter_Get(t *testing.T) {
 		}
 	})
 
-	t.Run("クロージャがエラーを返した場合、エラーを返すこと", func(t *testing.T) {
+	t.Run("If the closure returns an error, an error should be returned", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -55,7 +55,7 @@ func TestConverter_Get(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("sourceのLoaderの第二引数がfalseで返ってくる場合、第二引数がfalseで返ってくること", func(t *testing.T) {
+	t.Run("If the second argument of the source Loader returns false, the second return argument should be false", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -76,7 +76,7 @@ func TestConverter_Get(t *testing.T) {
 		}
 	})
 
-	t.Run("sourceのLoaderがエラーを返す場合、エラーを返すこと", func(t *testing.T) {
+	t.Run("If the source Loader returns an error, an error should be returned", func(t *testing.T) { // Translated
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
