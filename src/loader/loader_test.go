@@ -6,14 +6,14 @@ import (
 	"testing"
 )
 
-func TestLoader(t *testing.T) {
+func TestLoader_Load(t *testing.T) {
 	type Item struct {
 		Id   string
 		Name string
 		Age  int
 	}
 
-	t.Run("Load", func(t *testing.T) {
+	t.Run("クロージャで返した配列を返すこと", func(t *testing.T) {
 		testee := NewLoader(func() ([]*Item, error) {
 			return []*Item{
 				{"1", "John", 20},
@@ -34,7 +34,7 @@ func TestLoader(t *testing.T) {
 		assert.Equal(t, 40, items[2].Age)
 	})
 
-	t.Run("Load2", func(t *testing.T) {
+	t.Run("クロージャがエラーを返す場合、エラーを返すこと", func(t *testing.T) {
 		testee := NewLoader(func() ([]*Item, error) {
 			return nil, errors.New("error")
 		})

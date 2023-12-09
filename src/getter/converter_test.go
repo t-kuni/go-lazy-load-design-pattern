@@ -7,14 +7,14 @@ import (
 	"testing"
 )
 
-func TestConverter(t *testing.T) {
+func TestConverter_Get(t *testing.T) {
 	type Item struct {
 		Id   string
 		Name string
 		Age  int
 	}
 
-	t.Run("Get", func(t *testing.T) {
+	t.Run("変換処理を適応した後の値が取得できること", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -38,7 +38,24 @@ func TestConverter(t *testing.T) {
 		}
 	})
 
-	t.Run("sourceからokがfalseで返ってくる場合", func(t *testing.T) {
+	t.Run("クロージャがエラーを返した場合、エラーを返すこと", func(t *testing.T) {
+		mockCtrl := gomock.NewController(t)
+		defer mockCtrl.Finish()
+
+		mockGetter := NewMockIGetter[string, *Item](mockCtrl)
+		mockGetter.EXPECT().
+			Get(gomock.Eq("Jane")).
+			Return(&Item{"2", "Jane", 30}, true, nil).
+			Times(1)
+		testee := NewConverter[*Item, string, *Item](mockGetter, func(key string, v *Item) (*Item, error) {
+			return nil, errors.New("error")
+		})
+
+		_, _, err := testee.Get("Jane")
+		assert.Error(t, err)
+	})
+
+	t.Run("sourceのLoaderの第二引数がfalseで返ってくる場合、第二引数がfalseで返ってくること", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -59,7 +76,7 @@ func TestConverter(t *testing.T) {
 		}
 	})
 
-	t.Run("Get", func(t *testing.T) {
+	t.Run("sourceのLoaderがエラーを返す場合、エラーを返すこと", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 

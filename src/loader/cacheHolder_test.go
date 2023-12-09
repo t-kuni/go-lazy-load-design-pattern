@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestCacheHolder(t *testing.T) {
+func TestCacheHolder_Load(t *testing.T) {
 	type Item struct {
 		Id   string
 		Name string
@@ -44,7 +44,7 @@ func TestCacheHolder(t *testing.T) {
 		assert.Equal(t, 40, items[2].Age)
 	})
 
-	t.Run("Load2", func(t *testing.T) {
+	t.Run("sourceのLoaderがエラーを返した場合、エラーを返すこと", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 

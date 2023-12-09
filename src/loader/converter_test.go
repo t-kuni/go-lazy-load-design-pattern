@@ -7,14 +7,14 @@ import (
 	"testing"
 )
 
-func TestConverter(t *testing.T) {
+func TestConverter_Load(t *testing.T) {
 	type Item struct {
 		Id   string
 		Name string
 		Age  int
 	}
 
-	t.Run("Load", func(t *testing.T) {
+	t.Run("変換処理を適応した後の値が取得できること", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 
@@ -26,7 +26,7 @@ func TestConverter(t *testing.T) {
 				{"2", "Jane", 30},
 				{"3", "Joe", 40},
 			}, nil).
-			Times(1) // 1回しか呼び出されないこと
+			Times(1)
 		testee := NewConverter[*Item](mockLoader, func(items []*Item) ([]*Item, error) {
 			for i, _ := range items {
 				items[i].Name = items[i].Name + "(Converted)"
@@ -47,7 +47,28 @@ func TestConverter(t *testing.T) {
 		assert.Equal(t, 40, items[2].Age)
 	})
 
-	t.Run("Load2", func(t *testing.T) {
+	t.Run("クロージャがエラーを返す場合、エラーを返すこと", func(t *testing.T) {
+		mockCtrl := gomock.NewController(t)
+		defer mockCtrl.Finish()
+
+		mockLoader := NewMockILoader[*Item](mockCtrl)
+		mockLoader.EXPECT().
+			Load().
+			Return([]*Item{
+				{"1", "John", 20},
+				{"2", "Jane", 30},
+				{"3", "Joe", 40},
+			}, nil).
+			Times(1)
+		testee := NewConverter[*Item](mockLoader, func(items []*Item) ([]*Item, error) {
+			return nil, errors.New("error")
+		})
+
+		_, err := testee.Load()
+		assert.Error(t, err)
+	})
+
+	t.Run("sourceのLoaderがエラーを返した場合、エラーを返すこと", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 

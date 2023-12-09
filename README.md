@@ -46,17 +46,17 @@ func lazyLoadRecords() (getter.IGetter[string, *Record], getter.IGetter[int, *Re
 func main() {
 	recordsByName, recordsByAge := lazyLoadRecords()
 	
-	// do various things here
+	// At this point, there is no DB access
 
 	record, ok, err := recordsByName.Get("John")
 	println(record)
-	// show record that name is John
+	// Displays the record named "John"
+	// Here the DB access occurs
 
 	records, ok, err := recordsByAge.Get(20)
 	println(records)
-	// show multiple records that age is 20
-	
-	// No matter how many times Get is called, 
-	// DB access will only occur once.
+	// Displays multiple records of 20 years old
+	// Here, there is no DB access and it retrieves from the cache
 }
+
 ```
