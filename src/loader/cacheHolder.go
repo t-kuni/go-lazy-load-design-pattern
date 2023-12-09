@@ -5,7 +5,7 @@ type CacheHolder[T any] struct {
 	source ILoader[T]
 }
 
-func NewCacheHolder[T any](source ILoader[T]) *CacheHolder[T] {
+func NewCacheHolder[T any](source ILoader[T]) ILoader[T] {
 	return &CacheHolder[T]{
 		source: source,
 		arr:    nil,

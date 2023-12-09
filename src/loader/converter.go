@@ -5,7 +5,7 @@ type Converter[In any, Out any] struct {
 	converter func([]In) ([]Out, error)
 }
 
-func NewConverter[In any, Out any](source ILoader[In], converter func([]In) ([]Out, error)) *Converter[In, Out] {
+func NewConverter[In any, Out any](source ILoader[In], converter func([]In) ([]Out, error)) ILoader[Out] {
 	return &Converter[In, Out]{
 		source:    source,
 		converter: converter,

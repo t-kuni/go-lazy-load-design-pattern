@@ -5,7 +5,7 @@ type Converter[In any, Key any, Out any] struct {
 	converter func(key Key, v In) (Out, error)
 }
 
-func NewConverter[In any, Key any, Out any](source IGetter[Key, In], converter func(key Key, v In) (Out, error)) *Converter[In, Key, Out] {
+func NewConverter[In any, Key any, Out any](source IGetter[Key, In], converter func(key Key, v In) (Out, error)) IGetter[Key, Out] {
 	return &Converter[In, Key, Out]{
 		source:    source,
 		converter: converter,

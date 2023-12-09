@@ -9,7 +9,7 @@ type ArrayIndexer[In any, Key any, Out any] struct {
 	isIndexed bool
 }
 
-func NewArrayIndexer[In any, Key any, Out any](source loader.ILoader[In], indexer func(In) (Key, Out, error)) *ArrayIndexer[In, Key, Out] {
+func NewArrayIndexer[In any, Key any, Out any](source loader.ILoader[In], indexer func(In) (Key, Out, error)) IGetter[Key, []Out] {
 	return &ArrayIndexer[In, Key, Out]{
 		source:    source,
 		index:     make(map[any][]Out),
